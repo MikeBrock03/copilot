@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CachedTopTracks from './topTracksCache.json';
 import CachedAlbumTracks from './albumTracksCache.json';
-import getEnv from './env';
+import getEnv from './supabaseClient';
 
 const {
   SPOTIFY_API: { SHORT_TERM_API, LONG_TERM_API, ALBUM_TRACK_API_GETTER },

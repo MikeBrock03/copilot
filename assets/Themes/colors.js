@@ -1,6 +1,6 @@
 export const colors = {
-  background: '#121212',
-  spotify: '#1DB954',
-  gray: '#B3B3B3',
+  background: '#7674CB',
+  darkpurple: '#2C2952',
+  lighterpurple: '#7674CB',
   white: '#FFFFFF',
 };
