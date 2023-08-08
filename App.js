@@ -3,80 +3,71 @@ import { StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from 'expo-font';
-import BackgroundGeolocation from "@transistorsoft/react-native-background-geolocation";
-
 import MainPage from "./components/MainPage";
 import AuthPage from "./components/AuthPage";
 import AccountSetup from './components/AccountSetup';
 import PhoneNumberSearch from "./components/PhoneNumberSearch";
 import FriendRequests from "./components/FriendRequests";
 import UserIdContext from './UserIdContext';
+import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
+
 
 const Stack = createNativeStackNavigator();
 
+const LOCATION_TASK_NAME = 'background-speed-task';
+
+TaskManager.defineTask(LOCATION_TASK_NAME, ({ data: { locations }, error }) => {
+  if (error) {
+    console.error(error);
+    return;
+  }
+  const speed = locations[0].coords.speed;  // Gets speed of the most recent location update
+  console.log('Received speed:', speed);
+  // Handle the speed here (e.g., send to server, store locally, etc.)
+});
+
+
 export default function App() {
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
   let [fontsLoaded] = useFonts({
     'helveticaneue': require('./assets/Fonts/helveticaneue.ttf'),
   });
 
   const [userId, setUserId] = useState(null);
   
+
+  // TODO: change this to when they first make their account
   useEffect(() => {
-    // Define your event listeners here.
-    let startSpeedTime = null;
-    const SPEED_THRESHOLD = 15;
-    const TIME_THRESHOLD = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-    BackgroundGeolocation.onLocation(location => {
-      console.log('[location] -', location);
-
-      if (location.speed > SPEED_THRESHOLD) {
-        if (startSpeedTime === null) {
-          // Start the timer
-          startSpeedTime = Date.now();
-        } else if (Date.now() - startSpeedTime >= TIME_THRESHOLD) {
-          console.log('User has been driving for more than 5 minutes');
-          // Do something when user has been driving for 5 minutes
-
-          // Reset the timer
-          startSpeedTime = null;
-        }
-      } else {
-        // Reset the timer if speed drops below threshold
-        startSpeedTime = null;
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Foreground permission denied');
+        return;
       }
-    });
 
-    BackgroundGeolocation.ready({
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-      distanceFilter: 10,
-      stopTimeout: 1,
-      debug: true, // Debug sounds & notifications.
-      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-      stopOnTerminate: false,
-      startOnBoot: true,
-      batchSync: false,
-      autoSync: true,
-      headers: {
-        "X-FOO": "bar"
-      },
-      enableHeadless: true,
-      heartbeatInterval: 60
-    }, (state) => {
-      console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
-
-      if (!state.enabled) {
-        BackgroundGeolocation.start(function() {
-          console.log("- Start success");
-        });
+      // Request background permissions
+      let { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+      if (backgroundStatus !== 'granted') {
+        setErrorMsg('Background permission denied');
+        return;
       }
-    });
-  
-    // Don't forget to remove listeners!
-    return () => {
-      BackgroundGeolocation.removeListeners();
-    };
+
+      // 2. Start location updates
+      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: Location.Accuracy.Balanced,  // Good balance between accuracy and power consumption
+        timeInterval: 4 * 60 * 1000,  // Update every 4 minutes
+        distanceInterval: 10000,  // Update every 100 meters of movement
+        showsBackgroundLocationIndicator: false,  // No need to show the background location indicator
+    });    
+    })();
   }, []);
+
+
+  
   
   return (
     <View style={styles.container}>
@@ -90,6 +81,7 @@ export default function App() {
             <Stack.Screen name="FriendRequests" component={FriendRequests} options={{headerShown: false}} />
           </Stack.Navigator>
         </NavigationContainer>
+        
       </UserIdContext.Provider>
     </View>
   );

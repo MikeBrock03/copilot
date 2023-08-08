@@ -4246,6 +4246,11 @@ expo-linking@~3.3.0:
     qs "^6.9.1"
     url-parse "^1.5.9"
 
+expo-location@~15.0.1:
+  version "15.0.1"
+  resolved "https://registry.npmjs.org/expo-location/-/expo-location-15.0.1.tgz#b132b8b50ce4d2dd9257b7b66cec44beeba253a4"
+  integrity sha512-GOAP24m8fMahFcBT75H07f2+IQAOCOdNTzb8Ci/19NZ+Y/CY2lIvb55V8zu7Gn0+76FKPb7XC3ebQaq4ctn1QA==
+
 expo-modules-autolinking@1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-1.0.2.tgz#f072f342ab797e43b16ddcdef251fcd4db851e1a"
@@ -4276,6 +4281,13 @@ expo-status-bar@~1.4.2:
   version "1.4.4"
   resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.4.4.tgz#6874ccfda5a270d66f123a9f220735a76692d114"
   integrity sha512-5DV0hIEWgatSC3UgQuAZBoQeaS9CqeWRZ3vzBR9R/+IUD87Adbi4FGhU10nymRqFXOizGsureButGZIXPs7zEA==
+
+expo-task-manager@~11.0.1:
+  version "11.0.1"
+  resolved "https://registry.npmjs.org/expo-task-manager/-/expo-task-manager-11.0.1.tgz#0c131c74dba46eb97989841336d3c8bdbf9c2a28"
+  integrity sha512-9KXWkQyzldiTBz0+wRe7ypQQ0m02j838f8j0pDRrDbW2X5hBUJWzDGq7OItJ5F9vDjJ3oRZikOAhFGj+wxh3EA==
+  dependencies:
+    unimodules-app-loader "~4.0.0"
 
 expo-web-browser@~10.1.0:
   version "10.1.1"
@@ -9252,6 +9264,11 @@ unicode-property-aliases-ecmascript@^2.0.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-2.1.0.tgz#43d41e3be698bd493ef911077c9b131f827e8ccd"
   integrity sha512-6t3foTQI9qne+OZoVQB/8x8rk2k1eVy1gRXhV3oFQ5T6R1dqQ1xtin3XqSlx3+ATBkliTaR/hHyJBm+LVPNM8w==
+
+unimodules-app-loader@~4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/unimodules-app-loader/-/unimodules-app-loader-4.0.0.tgz#2e4e4e6460063898cefdcfff0fcb16e1c62ee0c8"
+  integrity sha512-YlV0rOM9pjdeTMEGR0rr/u+F7f1ygINUsTEiRIPvBewTk3Si/Sm8Ur5f92n+f0Sy1EIuOTGgyGaUdjJBfAd0YA==
 
 union-value@^1.0.0:
   version "1.0.1"
