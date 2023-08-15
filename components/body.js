@@ -10,7 +10,6 @@ const Body = ({speed}) => {
     return (
         <View style={styles.navigationContainer}>
            <Text style={styles.title}>no friends driving now!</Text>
-           <Text style={styles.subtitle}> fun fact, you're going: {speed} mph</Text>
         </View>
         
     );

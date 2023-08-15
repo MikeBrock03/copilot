@@ -1,6 +1,6 @@
 import 'react-native-url-polyfill/auto';
 import * as React from 'react';
-import { StyleSheet, Text, Image, Dimensions, View, TextInput } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, Image, Dimensions, View, TextInput } from "react-native";
 import { Themes } from "../assets/Themes";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import SignInHeader from "./SignInHeader";
@@ -19,6 +19,8 @@ export default function AuthPage( { navigation }) {
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const signUpUser = async () => {
     try {
@@ -63,14 +65,17 @@ export default function AuthPage( { navigation }) {
       } else {
         if (error) {
           console.log("Error during sign in:", error.message);
+          setErrorMessage(error.message);
         } else {
           console.log("Error during sign in: data or data.user is null");
+          setErrorMessage("Error during sign in. Please try again.")
         }
         // You can add any custom error message or notification to inform the user here.
       }
   
     } catch (error) {
       console.log("Error during sign in:", error.message);
+      setErrorMessage("An unexpected error occured. Please try again.")
       // You can add any custom error message or notification to inform the user here.
     }
   }
@@ -79,33 +84,45 @@ export default function AuthPage( { navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SignInHeader />
-      <View style={styles.textInput}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}/>
-      </View>
-        <View style={styles.textInput}>
-          <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}/>
+      <KeyboardAvoidingView 
+            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            style={styles.container}>
+        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <SignInHeader />
+          <View style={styles.textInput}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              autoCorrect={false}
+              keyboardType='email-address'
+              />
+          </View>
+            <View style={styles.textInput}>
+              <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}/>
+            </View>
+            {errorMessage && (
+              <Text style={styles.error}>{errorMessage}</Text>
+            )}
+          <View style={styles.column}>
+            <View style={styles.authButton}>
+              <Pressable style={styles.pressable} onPress={signUpUser}>
+                <Text style={styles.authText}>sign up</Text>
+              </Pressable>
+            </View>
+            <View style={styles.authButton}>
+              <Pressable style={styles.pressable} onPress={loginUser}>
+                <Text style={styles.authText}>log in</Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
-      <View style={styles.column}>
-        <View style={styles.authButton}>
-          <Pressable style={styles.pressable} onPress={signUpUser}>
-            <Text style={styles.authText}>sign up</Text>
-          </Pressable>
-        </View>
-        <View style={styles.authButton}>
-          <Pressable style={styles.pressable} onPress={loginUser}>
-            <Text style={styles.authText}>log in</Text>
-          </Pressable>
-        </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -127,6 +144,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingLeft: 10,
     backgroundColor: colors.background,
+},
+error: {
+  textAlign: 'center', 
+  marginTop: 10, 
+  color: colors.darkpurple,
+  fontSize: 15,
 },
     authButton: {
         flexDirection: "row",

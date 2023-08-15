@@ -31,65 +31,10 @@ export default function MainPage({ navigation, route }) {
 
   const goToOtherScreen = () => navigation.navigate("Sign");
 
-  // SPEED CALCULATION VERY IMPORTANT
-
-  const [speed, setSpeed] = useState(0);
-  const speedLimit = 30; // mph
-  const duration = 5 * 60 * 1000; // 5 minutes in milliseconds
-  let timer;
-
-  useEffect(() => {
-    if (typeof DeviceMotionEvent !== "undefined") {
-      const handleMotion = async (event) => {
-        const { x, y, z } = event.accelerationIncludingGravity;
-        const calculatedSpeed = calculateSpeed(x, y, z);
-
-        setSpeed(calculatedSpeed);
-
-        if (calculatedSpeed > speedLimit) {
-          if (!timer) {
-            timer = setTimeout(async () => {
-              await updateSpeedStatusInSupabase(true);
-            }, duration);
-          }
-        } else {
-          if (timer) {
-            clearTimeout(timer);
-            timer = null;
-            await updateSpeedStatusInSupabase(false);
-          }
-        }
-      };
-
-      window.addEventListener("devicemotion", handleMotion);
-
-      return () => {
-        window.removeEventListener("devicemotion", handleMotion);
-        clearTimeout(timer);
-      };
-    }
-  }, []);
-
-  const calculateSpeed = (x, y, z) => {
-    // Implement speed calculation logic here when ready
-    return Math.random() * 50;
-  };
-
-  const updateSpeedStatusInSupabase = async (status) => {
-    const { error } = await supabase
-      .from("profiles")
-      .update({ speed: status })
-      .eq("id", userId);
-
-    if (error) {
-      console.error("Failed to update speed status:", error);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <Header />
-      <Body speed={speed.toFixed(2)} />
+      <Body />
       <Questions />
       <Pressable
         style={styles.friendRequestButton}

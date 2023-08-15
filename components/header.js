@@ -22,7 +22,7 @@ export default function Header() {
                 </View>
             </Pressable>
             <Image source={images.logo} style={styles.logo} />
-            <Pressable onPress={() => navigation.navigate('Sign')}>
+            <Pressable onPress={() => navigation.navigate('SettingsPage')}>
                 <View style={styles.button}>
                     <Image source={Icons.settings.dark} style={styles.headerIcons}/>
                 </View>

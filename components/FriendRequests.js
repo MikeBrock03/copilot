@@ -25,7 +25,7 @@ export default function FriendRequests() {
     try {
       const { data, error } = await supabase
         .from("friend_requests")
-        .select("sender_id")
+        .select("id, sender_id")
         .eq("receiver_id", userId)
         .eq("status", 0); // assuming 0 represents pending requests
       if (error) {
@@ -138,6 +138,7 @@ export default function FriendRequests() {
           <Text style={styles.noRequestsText}>No friend requests now!</Text>
         ) : (
           friendRequests.map((request) => {
+            console.log("Request ID:", request.id);
             console.log("request: ", request);
             console.log("userProfiles: ", userProfiles);
             console.log("attempt at pulling first name: ", userProfiles[request.sender_id][0]?.first_name);
